@@ -462,12 +462,13 @@ svg{display:block}
 
 
 /* ---------- brand mosaic (company numbers) ---------- */
-.mz{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(10px,1.2vw,16px)}
+.mz{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(10px,1.2vw,16px)}
 .tile{position:relative;overflow:hidden;border-radius:6px;padding:clamp(22px,2.6vw,36px);display:flex;flex-direction:column;justify-content:space-between;gap:24px;min-height:clamp(210px,20vw,290px);opacity:0;translate:0 56px;transition:opacity .8s cubic-bezier(.2,.8,.2,1) calc(var(--i)*110ms),translate .9s cubic-bezier(.2,.8,.2,1) calc(var(--i)*110ms),background .45s,color .45s,box-shadow .45s}
 .mz.in .tile{opacity:1;translate:0 0}
 .mz.in .tile:hover{translate:0 -6px;transition-delay:0s}
 .tile .n{display:block;font-size:clamp(3rem,6vw,5.4rem);line-height:.9;font-weight:700;letter-spacing:-.03em;transition:color .45s}
 .tile .l{display:block;margin-top:10px;font-size:.95rem}
+.stat{min-width:0}
 .t-a{grid-column:span 5;grid-row:span 2;background:var(--purple);color:var(--paper);min-height:clamp(420px,42vw,600px)}
 .t-a h3{font-family:var(--font);font-size:clamp(1.6rem,3vw,2.7rem);line-height:1.05;font-weight:700;text-transform:uppercase;letter-spacing:-.02em;max-width:12ch}
 .t-a p{margin-top:14px;max-width:26ch;opacity:.85}
@@ -476,12 +477,12 @@ svg{display:block}
 .ring .rt text{font:700 12px var(--font);letter-spacing:.04em;fill:var(--paper)}
 .ring .mono{position:absolute;left:50%;top:50%;translate:-50% -50%;height:32%;width:auto;fill:var(--paper)}
 @keyframes spin{to{rotate:360deg}}
-.t-b{grid-column:span 7;background:var(--ink);color:var(--paper)}
+.t-b{grid-column:span 7;background:var(--ink);color:var(--paper);flex-direction:row;align-items:flex-end}
 .t-b .n{font-size:clamp(3.6rem,9vw,8rem)}
 .t-b .l{color:var(--tint)}
 .t-b:hover{background:var(--purple)}
 .t-b:hover .l{color:var(--paper)}
-.bars{position:absolute;right:clamp(18px,2.4vw,34px);top:clamp(18px,2.4vw,34px);display:flex;align-items:flex-end;gap:6px;height:clamp(64px,8vw,110px)}
+.bars{align-self:stretch;display:flex;align-items:flex-end;gap:6px;min-height:clamp(64px,8vw,110px)}
 .bars i{width:8px;height:100%;border-radius:2px;background:var(--tint);transform-origin:bottom;animation:eq calc(1s + var(--k)*.11s) ease-in-out infinite alternate}
 @keyframes eq{from{scale:1 .2}to{scale:1 1}}
 .t-c{--bgc:var(--paper);grid-column:span 4;background:var(--paper);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
@@ -505,7 +506,7 @@ svg{display:block}
 .t-d:hover .duo span:last-child{margin-left:6px;rotate:14deg;background:var(--tint)}
 .t-d:hover .duo span:last-child svg{fill:var(--ink)}
 @media (max-width:980px){.t-a{grid-column:1/-1;grid-row:auto;min-height:420px}.t-b{grid-column:1/-1}.t-c{grid-column:span 7}.t-d{grid-column:span 5}}
-@media (max-width:640px){.t-c,.t-d{grid-column:span 6}.tile .n{font-size:clamp(2.6rem,13vw,4rem)}.t-b .n{font-size:clamp(3.4rem,17vw,5.4rem)}.ring{width:92%}}
+@media (max-width:640px){.t-c,.t-d{grid-column:span 6}.tile{padding:18px;gap:18px}.t-c,.t-d,.t-b{min-height:190px}.tile .n{font-size:clamp(2.6rem,13vw,4rem)}.t-b .n{font-size:clamp(3.4rem,17vw,5.4rem)}.ring{width:92%}.avs i{width:30px;height:30px;margin-left:-9px}.duo span{width:44px}.duo span:last-child{margin-left:-10px}.bars{gap:5px}.bars i{width:6px}.bars i:nth-child(n+11){display:none}}
 @media (prefers-reduced-motion:reduce){.tile{opacity:1;translate:0 0}}
 
 /* ---------- modal ---------- */
@@ -1186,12 +1187,12 @@ window.PF = (function () {
 
   P.mosaic = D => {
     const M = D.mosaic, s = D.stats;
-    const num = x => `<b class="n" data-count="${x.n}" data-suffix="${esc(x.s || "")}">0</b><span class="l">${esc(x.l)}</span>`;
+    const num = x => `<div class="stat"><b class="n" data-count="${x.n}" data-suffix="${esc(x.s || "")}">0</b><span class="l">${esc(x.l)}</span></div>`;
     const ringText = "DESIGN — SOCIAL MEDIA — SOFTWARE — ";
     return `<section class="sec" id="about" data-nav="about" style="padding-top:0"><div class="wrap"><div class="mz">
       <article class="tile t-a" style="--i:0"><div><h3>${esc(M.title)}</h3><p>${esc(M.text)}</p></div>
         <div class="ring" aria-hidden="true"><svg class="rt" viewBox="0 0 200 200"><defs><path id="rp" d="M100 100m-80 0a80 80 0 1 1 160 0a80 80 0 1 1-160 0"/></defs><text><textPath href="#rp" textLength="486" lengthAdjust="spacing">${ringText}</textPath></text></svg>${P.mono("mono")}</div></article>
-      <article class="tile t-b" style="--i:1"><div class="bars" aria-hidden="true">${Array.from({ length: 14 }, (_, k) => `<i style="--k:${k}"></i>`).join("")}</div>${num(s[0])}</article>
+      <article class="tile t-b" style="--i:1">${num(s[0])}<div class="bars" aria-hidden="true">${Array.from({ length: 14 }, (_, k) => `<i style="--k:${k}"></i>`).join("")}</div></article>
       <article class="tile t-c" style="--i:2"><div class="avs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>${num(s[1])}</article>
       <article class="tile t-d" style="--i:3"><div class="duo" aria-hidden="true"><span>${P.mono()}</span><span>${P.mono()}</span></div>${num(s[2])}</article>
     </div></div></section>`;
